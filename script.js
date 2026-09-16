@@ -1,270 +1,947 @@
 document.addEventListener("DOMContentLoaded", () => {
-"use strict";
+    "use strict";
 
-/* ================================
-   Mobile Menu
-================================= */
+    /* =========================================
+       SETTINGS
+    ========================================= */
 
-const menuToggle = document.getElementById("menuToggle");
-const navbar = document.getElementById("navbar");
+    /*
+        اكتب رقم واتساب هنا بصيغة دولية بدون +
+        مثال مصر:
+        2010XXXXXXXXX
+    */
 
-if (menuToggle && navbar) {
-    menuToggle.addEventListener("click", () => {
-        navbar.classList.toggle("show");
+    const WHATSAPP_NUMBER = "";
 
-        const icon = menuToggle.querySelector("i");
+    /*
+        اكتب رقم الهاتف هنا
+        مثال:
+        01000000000
+    */
 
-        if (icon) {
-            if (navbar.classList.contains("show")) {
-                icon.classList.remove("fa-bars");
-                icon.classList.add("fa-xmark");
-            } else {
-                icon.classList.remove("fa-xmark");
-                icon.classList.add("fa-bars");
-            }
-        }
-    });
+    const PHONE_NUMBER = "";
 
-    /* Close menu after clicking a link */
-    const navLinks = navbar.querySelectorAll("a");
 
-    navLinks.forEach((link) => {
-        link.addEventListener("click", () => {
-            navbar.classList.remove("show");
+    /* =========================================
+       MOBILE MENU
+    ========================================= */
+
+    const menuToggle = document.getElementById("menuToggle");
+    const navbar = document.getElementById("navbar");
+
+    if (menuToggle && navbar) {
+
+        menuToggle.addEventListener("click", () => {
+
+            navbar.classList.toggle("show");
 
             const icon = menuToggle.querySelector("i");
 
             if (icon) {
-                icon.classList.remove("fa-xmark");
-                icon.classList.add("fa-bars");
+
+                if (navbar.classList.contains("show")) {
+
+                    icon.classList.remove("fa-bars");
+                    icon.classList.add("fa-xmark");
+
+                    menuToggle.setAttribute(
+                        "aria-label",
+                        "إغلاق القائمة"
+                    );
+
+                } else {
+
+                    icon.classList.remove("fa-xmark");
+                    icon.classList.add("fa-bars");
+
+                    menuToggle.setAttribute(
+                        "aria-label",
+                        "فتح القائمة"
+                    );
+                }
             }
         });
-    });
-}
 
 
-/* ================================
-   Header Scroll Effect
-================================= */
+        /* إغلاق القائمة بعد اختيار أي قسم */
 
-const header = document.querySelector(".header");
+        const navLinks = navbar.querySelectorAll("a");
 
-function handleHeaderScroll() {
-    if (!header) return;
+        navLinks.forEach((link) => {
 
-    if (window.scrollY > 50) {
-        header.classList.add("scrolled");
-    } else {
-        header.classList.remove("scrolled");
+            link.addEventListener("click", () => {
+
+                navbar.classList.remove("show");
+
+                const icon = menuToggle.querySelector("i");
+
+                if (icon) {
+
+                    icon.classList.remove("fa-xmark");
+                    icon.classList.add("fa-bars");
+
+                }
+
+                menuToggle.setAttribute(
+                    "aria-label",
+                    "فتح القائمة"
+                );
+
+            });
+
+        });
     }
-}
-
-window.addEventListener("scroll", handleHeaderScroll);
-handleHeaderScroll();
 
 
-/* ================================
-   FAQ Accordion
-================================= */
+    /* =========================================
+       HEADER SCROLL EFFECT
+    ========================================= */
 
-const faqItems = document.querySelectorAll(".faq-item");
+    const header = document.getElementById("header");
 
-faqItems.forEach((item) => {
-    const question = item.querySelector(".faq-question");
+    function handleHeaderScroll() {
 
-    if (!question) return;
+        if (!header) return;
 
-    question.addEventListener("click", () => {
+        if (window.scrollY > 40) {
 
-        /* Close other FAQ items */
-        faqItems.forEach((otherItem) => {
-            if (otherItem !== item) {
-                otherItem.classList.remove("active");
-            }
-        });
+            header.classList.add("scrolled");
 
-        /* Toggle current item */
-        item.classList.toggle("active");
-    });
-});
+        } else {
 
+            header.classList.remove("scrolled");
 
-/* ================================
-   Smooth Scrolling
-================================= */
-
-const internalLinks = document.querySelectorAll('a[href^="#"]');
-
-internalLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-
-        const targetId = link.getAttribute("href");
-
-        if (!targetId || targetId === "#") return;
-
-        const target = document.querySelector(targetId);
-
-        if (!target) return;
-
-        event.preventDefault();
-
-        const headerHeight = header ? header.offsetHeight : 0;
-
-        const targetPosition =
-            target.getBoundingClientRect().top +
-            window.pageYOffset -
-            headerHeight;
-
-        window.scrollTo({
-            top: targetPosition,
-            behavior: "smooth"
-        });
-    });
-});
-
-
-/* ================================
-   Active Navigation Link
-================================= */
-
-const sections = document.querySelectorAll("section[id]");
-const navigationLinks = document.querySelectorAll('.navbar a[href^="#"]');
-
-function updateActiveNavigation() {
-    let currentSection = "";
-
-    sections.forEach((section) => {
-        const sectionTop = section.offsetTop - 180;
-        const sectionHeight = section.offsetHeight;
-
-        if (
-            window.scrollY >= sectionTop &&
-            window.scrollY < sectionTop + sectionHeight
-        ) {
-            currentSection = section.getAttribute("id");
         }
-    });
+    }
 
-    navigationLinks.forEach((link) => {
-        link.classList.remove("active");
+    window.addEventListener(
+        "scroll",
+        handleHeaderScroll,
+        { passive: true }
+    );
 
-        const href = link.getAttribute("href");
-
-        if (href === `#${currentSection}`) {
-            link.classList.add("active");
-        }
-    });
-}
-
-window.addEventListener("scroll", updateActiveNavigation);
-updateActiveNavigation();
+    handleHeaderScroll();
 
 
-/* ================================
-   Reveal Animation
-================================= */
+    /* =========================================
+       FAQ ACCORDION
+    ========================================= */
 
-const revealElements = document.querySelectorAll(
-    ".service-card, .about-content, .about-image, .package-card, .review-card, .contact-card"
-);
+    const faqItems = document.querySelectorAll(".faq-item");
 
-if ("IntersectionObserver" in window) {
+    faqItems.forEach((item) => {
 
-    const observer = new IntersectionObserver(
-        (entries, observerInstance) => {
+        const question =
+            item.querySelector(".faq-question");
 
-            entries.forEach((entry) => {
+        const answer =
+            item.querySelector(".faq-answer");
 
-                if (entry.isIntersecting) {
+        if (!question) return;
 
-                    entry.target.classList.add("revealed");
 
-                    observerInstance.unobserve(entry.target);
+        question.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+
+        question.addEventListener("click", () => {
+
+            const isActive =
+                item.classList.contains("active");
+
+
+            /* إغلاق جميع الأسئلة الأخرى */
+
+            faqItems.forEach((otherItem) => {
+
+                if (otherItem !== item) {
+
+                    otherItem.classList.remove("active");
+
+                    const otherQuestion =
+                        otherItem.querySelector(
+                            ".faq-question"
+                        );
+
+                    const otherAnswer =
+                        otherItem.querySelector(
+                            ".faq-answer"
+                        );
+
+                    if (otherQuestion) {
+
+                        otherQuestion.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+                    }
+
+                    if (otherAnswer) {
+
+                        otherAnswer.style.maxHeight = null;
+
+                    }
                 }
             });
 
-        },
-        {
-            threshold: 0.12
+
+            /* فتح / إغلاق السؤال الحالي */
+
+            if (isActive) {
+
+                item.classList.remove("active");
+
+                question.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                if (answer) {
+
+                    answer.style.maxHeight = null;
+
+                }
+
+            } else {
+
+                item.classList.add("active");
+
+                question.setAttribute(
+                    "aria-expanded",
+                    "true"
+                );
+
+                if (answer) {
+
+                    answer.style.maxHeight =
+                        answer.scrollHeight + "px";
+
+                }
+            }
+
+        });
+
+    });
+
+
+    /* =========================================
+       SMOOTH SCROLL
+    ========================================= */
+
+    const internalLinks =
+        document.querySelectorAll(
+            'a[href^="#"]'
+        );
+
+
+    internalLinks.forEach((link) => {
+
+        link.addEventListener("click", (event) => {
+
+            const targetId =
+                link.getAttribute("href");
+
+
+            if (
+                !targetId ||
+                targetId === "#"
+            ) {
+
+                return;
+
+            }
+
+
+            const target =
+                document.querySelector(targetId);
+
+
+            if (!target) return;
+
+
+            event.preventDefault();
+
+
+            const headerHeight =
+                header
+                    ? header.offsetHeight
+                    : 0;
+
+
+            const targetPosition =
+                target.getBoundingClientRect().top +
+                window.pageYOffset -
+                headerHeight;
+
+
+            window.scrollTo({
+
+                top: targetPosition,
+
+                behavior: "smooth"
+
+            });
+
+        });
+
+    });
+
+
+    /* =========================================
+       ACTIVE NAVIGATION
+    ========================================= */
+
+    const sections =
+        document.querySelectorAll(
+            "main section[id]"
+        );
+
+
+    const navigationLinks =
+        document.querySelectorAll(
+            '.navbar a[href^="#"]'
+        );
+
+
+    function updateActiveNavigation() {
+
+        let currentSection = "";
+
+
+        sections.forEach((section) => {
+
+            const sectionTop =
+                section.offsetTop - 200;
+
+            const sectionBottom =
+                sectionTop +
+                section.offsetHeight;
+
+
+            if (
+                window.scrollY >= sectionTop &&
+                window.scrollY < sectionBottom
+            ) {
+
+                currentSection =
+                    section.getAttribute("id");
+
+            }
+
+        });
+
+
+        navigationLinks.forEach((link) => {
+
+            link.classList.remove("active");
+
+
+            const href =
+                link.getAttribute("href");
+
+
+            if (
+                currentSection &&
+                href === `#${currentSection}`
+            ) {
+
+                link.classList.add("active");
+
+            }
+
+        });
+
+    }
+
+
+    window.addEventListener(
+        "scroll",
+        updateActiveNavigation,
+        { passive: true }
+    );
+
+
+    updateActiveNavigation();
+
+
+    /* =========================================
+       REVEAL ANIMATION
+    ========================================= */
+
+    const revealElements =
+        document.querySelectorAll(
+            `
+            .service-card,
+            .about-content,
+            .about-visual,
+            .package-card,
+            .review-card,
+            .contact-box,
+            .faq-item
+            `
+        );
+
+
+    if (
+        "IntersectionObserver" in window
+    ) {
+
+        const revealObserver =
+            new IntersectionObserver(
+                (entries, observer) => {
+
+                    entries.forEach((entry) => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            entry.target.classList.add(
+                                "revealed"
+                            );
+
+                            observer.unobserve(
+                                entry.target
+                            );
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+
+        revealElements.forEach((element) => {
+
+            element.classList.add("reveal");
+
+            revealObserver.observe(
+                element
+            );
+
+        });
+
+    } else {
+
+        revealElements.forEach((element) => {
+
+            element.classList.add(
+                "revealed"
+            );
+
+        });
+
+    }
+
+
+    /* =========================================
+       BACK TO TOP BUTTON
+    ========================================= */
+
+    const backToTop =
+        document.createElement("button");
+
+
+    backToTop.className =
+        "back-to-top";
+
+
+    backToTop.id =
+        "backToTop";
+
+
+    backToTop.type =
+        "button";
+
+
+    backToTop.setAttribute(
+        "aria-label",
+        "العودة إلى أعلى الصفحة"
+    );
+
+
+    backToTop.innerHTML =
+        '<i class="fa-solid fa-arrow-up"></i>';
+
+
+    document.body.appendChild(
+        backToTop
+    );
+
+
+    function updateBackToTop() {
+
+        if (
+            window.scrollY > 500
+        ) {
+
+            backToTop.classList.add(
+                "show"
+            );
+
+        } else {
+
+            backToTop.classList.remove(
+                "show"
+            );
+
+        }
+
+    }
+
+
+    window.addEventListener(
+        "scroll",
+        updateBackToTop,
+        { passive: true }
+    );
+
+
+    updateBackToTop();
+
+
+    backToTop.addEventListener(
+        "click",
+        () => {
+
+            window.scrollTo({
+
+                top: 0,
+
+                behavior: "smooth"
+
+            });
+
         }
     );
 
-    revealElements.forEach((element) => {
-        element.classList.add("reveal");
-        observer.observe(element);
+
+    /* =========================================
+       WHATSAPP
+    ========================================= */
+
+    const whatsappButtons =
+        document.querySelectorAll(
+            ".whatsapp"
+        );
+
+
+    whatsappButtons.forEach((button) => {
+
+        button.addEventListener(
+            "click",
+            (event) => {
+
+                event.preventDefault();
+
+
+                if (!WHATSAPP_NUMBER) {
+
+                    showContactMessage(
+                        "يرجى إضافة رقم الواتساب في ملف script.js أولاً."
+                    );
+
+                    return;
+
+                }
+
+
+                const message =
+                    "مرحبًا، أريد الاستفسار عن الخدمات والباقات المتاحة.";
+
+
+                const whatsappURL =
+                    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+
+                window.open(
+                    whatsappURL,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+
+            }
+        );
+
     });
 
-} else {
 
-    revealElements.forEach((element) => {
-        element.classList.add("revealed");
+    /* =========================================
+       PHONE
+    ========================================= */
+
+    const phoneButtons =
+        document.querySelectorAll(
+            ".phone"
+        );
+
+
+    phoneButtons.forEach((button) => {
+
+        button.addEventListener(
+            "click",
+            (event) => {
+
+                if (!PHONE_NUMBER) {
+
+                    event.preventDefault();
+
+                    showContactMessage(
+                        "يرجى إضافة رقم الهاتف في ملف script.js أولاً."
+                    );
+
+                    return;
+
+                }
+
+
+                button.setAttribute(
+                    "href",
+                    `tel:${PHONE_NUMBER}`
+                );
+
+            }
+        );
+
     });
-}
 
 
-/* ================================
-   Back To Top Button
-================================= */
+    /* =========================================
+       PACKAGE BUTTONS
+    ========================================= */
 
-const backToTop = document.createElement("button");
+    const packageButtons =
+        document.querySelectorAll(
+            ".package-btn"
+        );
 
-backToTop.className = "back-to-top";
-backToTop.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
-backToTop.setAttribute("aria-label", "العودة إلى أعلى الصفحة");
 
-document.body.appendChild(backToTop);
+    packageButtons.forEach((button) => {
 
-window.addEventListener("scroll", () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-    if (window.scrollY > 500) {
-        backToTop.classList.add("show");
-    } else {
-        backToTop.classList.remove("show");
+                const packageCard =
+                    button.closest(
+                        ".package-card"
+                    );
+
+
+                if (!packageCard) return;
+
+
+                const packageName =
+                    packageCard.querySelector(
+                        ".package-name"
+                    );
+
+
+                if (!packageName) return;
+
+
+                const selectedPackage =
+                    packageName.textContent.trim();
+
+
+                if (!WHATSAPP_NUMBER) {
+
+                    return;
+
+                }
+
+
+                const message =
+                    `مرحبًا، أرغب في الاستفسار عن ${selectedPackage}.`;
+
+
+                const whatsappURL =
+                    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+
+                window.open(
+                    whatsappURL,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+
+            }
+        );
+
+    });
+
+
+    /* =========================================
+       SERVICE BUTTONS
+    ========================================= */
+
+    const serviceButtons =
+        document.querySelectorAll(
+            ".service-card a"
+        );
+
+
+    serviceButtons.forEach((button) => {
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                const serviceCard =
+                    button.closest(
+                        ".service-card"
+                    );
+
+
+                if (!serviceCard) return;
+
+
+                const serviceName =
+                    serviceCard.querySelector(
+                        "h3"
+                    );
+
+
+                if (!serviceName) return;
+
+
+                const selectedService =
+                    serviceName.textContent.trim();
+
+
+                if (!WHATSAPP_NUMBER) {
+
+                    return;
+
+                }
+
+
+                const message =
+                    `مرحبًا، أريد الاستفسار عن خدمة ${selectedService}.`;
+
+
+                const whatsappURL =
+                    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+
+                window.open(
+                    whatsappURL,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+
+            }
+        );
+
+    });
+
+
+    /* =========================================
+       CURRENT YEAR
+    ========================================= */
+
+    const yearElement =
+        document.getElementById(
+            "currentYear"
+        );
+
+
+    if (yearElement) {
+
+        yearElement.textContent =
+            new Date().getFullYear();
+
     }
 
-});
 
-backToTop.addEventListener("click", () => {
+    /* =========================================
+       CONTACT MESSAGE
+    ========================================= */
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+    function showContactMessage(message) {
 
-});
-
-
-/* ================================
-   Current Year
-================================= */
-
-const yearElement = document.getElementById("currentYear");
-
-if (yearElement) {
-    yearElement.textContent = new Date().getFullYear();
-}
+        const oldMessage =
+            document.querySelector(
+                ".contact-message"
+            );
 
 
-/* ================================
-   Prevent Empty Contact Links
-================================= */
+        if (oldMessage) {
 
-const placeholderLinks = document.querySelectorAll(
-    'a[href="tel:"], a[href="#"]'
-);
+            oldMessage.remove();
 
-placeholderLinks.forEach((link) => {
-
-    link.addEventListener("click", (event) => {
-
-        const href = link.getAttribute("href");
-
-        if (href === "tel:" || href === "#") {
-            event.preventDefault();
         }
 
-    });
 
-});
+        const messageElement =
+            document.createElement("div");
+
+
+        messageElement.className =
+            "contact-message";
+
+
+        messageElement.textContent =
+            message;
+
+
+        messageElement.style.cssText = `
+            margin-top: 18px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            background: rgba(215,181,90,0.10);
+            border: 1px solid rgba(215,181,90,0.35);
+            color: #f0d98a;
+            text-align: center;
+            font-size: 14px;
+        `;
+
+
+        const contactButtons =
+            document.querySelector(
+                ".contact-buttons"
+            );
+
+
+        if (contactButtons) {
+
+            contactButtons.after(
+                messageElement
+            );
+
+        }
+
+
+        setTimeout(() => {
+
+            messageElement.remove();
+
+        }, 5000);
+
+    }
+
+
+    /* =========================================
+       HERO PARALLAX - LIGHT EFFECT
+    ========================================= */
+
+    const hero =
+        document.querySelector(".hero");
+
+
+    const heroCard =
+        document.querySelector(".hero-card");
+
+
+    if (
+        hero &&
+        heroCard &&
+        window.innerWidth > 900
+    ) {
+
+        hero.addEventListener(
+            "mousemove",
+            (event) => {
+
+                const rect =
+                    hero.getBoundingClientRect();
+
+
+                const x =
+                    (event.clientX -
+                        rect.left) /
+                    rect.width -
+                    0.5;
+
+
+                const y =
+                    (event.clientY -
+                        rect.top) /
+                    rect.height -
+                    0.5;
+
+
+                heroCard.style.transform =
+                    `perspective(1000px)
+                     rotateY(${x * 5}deg)
+                     rotateX(${y * -5}deg)`;
+
+            }
+        );
+
+
+        hero.addEventListener(
+            "mouseleave",
+            () => {
+
+                heroCard.style.transform =
+                    "";
+
+            }
+        );
+
+    }
+
+
+    /* =========================================
+       ESC KEY
+    ========================================= */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            if (
+                event.key === "Escape" &&
+                navbar
+            ) {
+
+                navbar.classList.remove(
+                    "show"
+                );
+
+
+                if (menuToggle) {
+
+                    const icon =
+                        menuToggle.querySelector(
+                            "i"
+                        );
+
+
+                    if (icon) {
+
+                        icon.classList.remove(
+                            "fa-xmark"
+                        );
+
+                        icon.classList.add(
+                            "fa-bars"
+                        );
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =========================================
+       PAGE READY
+    ========================================= */
+
+    document.body.classList.add(
+        "page-loaded"
+    );
 
 });
