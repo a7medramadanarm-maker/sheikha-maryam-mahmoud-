@@ -2271,3 +2271,100 @@ ul {
     }
 
 }
+/* ================================
+Reveal Animation
+================================ */
+
+.reveal {
+opacity: 0;
+transform: translateY(35px);
+transition:
+opacity 0.7s ease,
+transform 0.7s ease;
+}
+
+.revealed {
+opacity: 1;
+transform: translateY(0);
+}
+
+/* ================================
+Back To Top
+================================ */
+
+.back-to-top {
+position: fixed;
+left: 25px;
+bottom: 25px;
+
+width: 48px;
+height: 48px;
+
+border: 1px solid rgba(215, 181, 90, 0.5);
+border-radius: 50%;
+
+background: rgba(21, 16, 32, 0.95);
+color: var(--gold);
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+font-size: 16px;
+
+cursor: pointer;
+
+opacity: 0;
+visibility: hidden;
+
+transform: translateY(20px);
+
+transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease;
+
+z-index: 999;
+
+}
+
+.back-to-top.show {
+opacity: 1;
+visibility: visible;
+transform: translateY(0);
+}
+
+.back-to-top:hover {
+background: var(--gold);
+color: #08060f;
+transform: translateY(-4px);
+}
+
+/* ================================
+Active Navigation
+================================ */
+
+.navbar a.active {
+color: var(--gold);
+}
+
+.navbar a.active::after {
+width: 100%;
+}
+
+/* ================================
+Mobile
+================================ */
+
+@media (max-width: 600px) {
+
+.back-to-top {
+    left: 15px;
+    bottom: 15px;
+    width: 44px;
+    height: 44px;
+}
+
+   }
